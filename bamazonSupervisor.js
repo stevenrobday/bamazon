@@ -15,6 +15,7 @@ connection.connect(err => {
     menuOptions();
 });
 
+//menu options for supervisor
 function menuOptions() {
     inquirer
         .prompt({
@@ -39,6 +40,7 @@ function menuOptions() {
         });
 }
 
+//function to view sales in a table
 function viewSales() {
     var query = "SELECT department_id, d.department_name, over_head_costs, IFNULL(SUM(product_sales), 0) AS total_product_sales, IFNULL(SUM(product_sales) - over_head_costs, 0 - over_head_costs) AS total_profit FROM products p RIGHT JOIN departments d ON p.department_name = d.department_name GROUP BY d.department_name ORDER BY department_id;";
     connection.query(query, (err, res) => {
@@ -61,6 +63,7 @@ function viewSales() {
     });
 }
 
+//function to create a new department
 function createDepartment() {
     inquirer.prompt([
         {
@@ -91,6 +94,7 @@ function createDepartment() {
     });
 }
 
+//mysql function to add new department
 function addDepartment(department, overhead) {
     var query = "INSERT INTO departments (department_name, over_head_costs) VALUES (?, ?)";
     connection.query(query, [department, overhead], (err) => {
@@ -100,28 +104,7 @@ function addDepartment(department, overhead) {
     });
 }
 
-function showData() {
-    var query = "SELECT SUM () FROM products";
-    connection.query(query, (err, res) => {
-        if (err) throw err;
-        var tableArray = [];
-        res.forEach(function (el) {
-            var tableObj = {
-                "item id": el.item_id,
-                "product": el.product_name,
-                "department": el.department_name,
-                "price": el.price,
-                "stock": el.stock_quantity
-            };
-            tableArray.push(tableObj);
-        });
-
-        console.table(tableArray);
-
-        promptReturn();
-    });
-}
-
+//ask supervisor to return to options
 function promptReturn() {
     inquirer.prompt([
         {

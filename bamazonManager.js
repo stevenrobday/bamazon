@@ -2,8 +2,8 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 const cTable = require('console.table');
 
+//viewProducts function will fork based on state
 var state;
-
 const VIEW_PRODUCTS = 0;
 const ADD_INVENTORY = 1;
 
@@ -20,6 +20,7 @@ connection.connect(err => {
     menuOptions();
 });
 
+//options for manager to choose from
 function menuOptions() {
     inquirer
         .prompt({
@@ -34,6 +35,7 @@ function menuOptions() {
             ]
         })
         .then(function (answer) {
+            //run appropriate function
             switch (answer.option) {
                 case "View Products for Sale":
                     state = VIEW_PRODUCTS;
@@ -56,6 +58,7 @@ function menuOptions() {
         });
 }
 
+//get product count
 var getProductCount = () => {
     return new Promise(resolve => {
         var query = "SELECT COUNT(*) AS count FROM products";
@@ -66,6 +69,7 @@ var getProductCount = () => {
     });
 }
 
+//get the products, throw them in a table
 function viewProducts() {
     var query = "SELECT * FROM products";
     connection.query(query, (err, res) => {
@@ -91,6 +95,7 @@ function viewProducts() {
     });
 }
 
+//gets items with an inventory of less than five
 function viewLowInventory() {
     var query = "SELECT * FROM products WHERE stock_quantity < 5";
     connection.query(query, (err, res) => {
@@ -113,6 +118,7 @@ function viewLowInventory() {
     });
 }
 
+//prompts manager for product to add quantity. includes validation.
 function itemSelect(productCount) {
     inquirer.prompt([
         {
@@ -139,12 +145,14 @@ function itemSelect(productCount) {
             }
         }
     ]).then(answer => {
+        //then get product based on answer and prompt for quantity
         getProductByID(answer.id).then(product => {
             quantityPrompt(product, answer.id);
         });
     });
 }
 
+//prompt for quantity. includes validation.
 function quantityPrompt(product, id) {
     console.log("You will add to the \"" + product + "\"!");
     inquirer.prompt([
@@ -228,6 +236,7 @@ var getDepartments = () => {
     });
 }
 
+//prompt manager to create product. includes validation.
 function createProduct() {
     getDepartments().then(departments => {
         inquirer.prompt([
@@ -294,6 +303,7 @@ function createProduct() {
     });
 }
 
+//add product into database
 function addProduct(params) {
     var query = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES (?, ?, ?, ?);";
     connection.query(query, [params.product, params.department, params.price, params.quantity], (err) => {
@@ -303,6 +313,7 @@ function addProduct(params) {
     });
 }
 
+//prompt manager to return to original page.
 function promptReturn() {
     inquirer.prompt([
         {
