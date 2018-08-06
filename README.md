@@ -22,7 +22,7 @@ The user must choose wisely, or they will be smacked.
 
 The customer also must choose wisely when purchasing, or they will be smacked.
 
-![customer Purchase](/images/customerBuy.PNG)
+![customer buy](/images/customerBuy.PNG)
 
 The customer can then purchase something else, otherwise they will be thrown out of the store.
 
