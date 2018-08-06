@@ -82,7 +82,7 @@ Here is manager edition in action:
 
 To open supervisor edition, enter the following command:
 
-    node amazonSupervisor
+    node bamazonSupervisor
 
 The supervisor is then prompted to select an option.
 
